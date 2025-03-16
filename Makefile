@@ -1,25 +1,14 @@
-flags=-02 -Wall -std=c2x
-ldflags=-lbu
+.c.o:
+	gcc -g -c $?
 
-.PHONY: all clean
+# compile client and server
+all: mailclient mailserver
 
+# compile client only
+mailclient: mailclient.o mailutils.o
+	gcc -g -o mailclient mailclient.o  mailutils.o 
 
-all: clean email client
-
-email:email.o
-cc $(flags) $^ -o $@ $(lsflags)
-
-email.o: email.c email.h
-cc $(flags) -c $<
-
-client.o: client.c email.h
-cc $(flags) -c $<
-
-client: client.o
-cc $(flags) $^ -o $@ $(ldflags)
-
-client.o: client.c email.h
-cc $(flags) -c $<
-
-clean: 
-rm -f *.o email client
+# compile server program
+mailserver: mailserver.o mailutils.o
+	gcc -g -o mailserver mailserver.o  mailutils.o 
+  
